@@ -26,7 +26,7 @@
 =======================================================*/
 
 package Packet;
-
+	
 	typedef struct packed{
       
       Type::RobIndex_T robIndex;
@@ -51,8 +51,8 @@ package Packet;
       
       logic[31:8] reserved;
       Type::PhyRegisterId_T prevMappedPhyReg;
-      
-    }RruToRob2;
+	
+	}RruToRob2;
 
 	typedef struct packed{
       
