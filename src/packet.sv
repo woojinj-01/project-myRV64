@@ -62,7 +62,7 @@ package Packet;
 		logic[20:8] reserved2;
 		OperationId_T operationId;
 		
-	}DecoderToRob1
+	}DecoderToRob1;
 
 	typedef struct packed{
 		Data32_T lowerImmediate;
@@ -95,7 +95,7 @@ package Packet;
 		Packet::DecoderToRru packet;
 		
 		packet.robIndex = robIndex;
-		packet.reserved = 6'b000000;
+		packet.reserved = '0;
 		packet.dstArchReg = dstArchReg;
 		packet.srcArchReg1 = srcArchReg1;
 		packet.srcArchReg2 = srcArchReg2;
@@ -114,7 +114,7 @@ package Packet;
 		Packet::RruToRob1 packet;
 		
 		packet.robIndex = robIndex;
-		packet.reserved = 1'b0;
+		packet.reserved = '0;
 		packet.dstPhyReg = dstPhyReg;
 		packet.srcPhyReg1 = srcPhyReg1;
 		packet.srcPhyReg2 = srcPhyReg2;
@@ -129,7 +129,7 @@ package Packet;
 	);
 		Packet::RruToRob2 packet;
 		
-		packet.reserved = 24'b0;
+		packet.reserved = '0;
 		packet.prevMappedPhyReg = prevMappedPhyReg;
 		
 		return packet;
@@ -146,10 +146,10 @@ package Packet;
 		Packet::DecoderToRob1 packet;
 		
 		packet.robIndex = robIndex;
-		packet.reserved1 = 2'b00;
+		packet.reserved1 = '0;
 		packet.isBranchInstruction = isBranchInstruction;
 		packet.isBranchTaken = isBranchTaken;
-		packet.reserved2 = 13'b0;
+		packet.reserved2 = '0;
 		packet.operationId = operationId;
 		
 		return packet;
