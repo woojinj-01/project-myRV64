@@ -25,9 +25,8 @@ module RegRenamingUnit #(
   typedef enum{MAP_CONSUMER, MAP_PRODUCER}      mapOption_t;
   typedef logic[VALID_START:PASTMAP_END] mapTable_t[0:NUM_ARCHREG-1];
   typedef logic[0:NUM_PHYREG-1] bitmap_t;
-  typedef logic[SIZE_PHYREGPTR-1:0] phyRegPtr_t;
-  
-  parameter SIZE_PHYREGPTR = 7 //log2(NUM_PHYREG)
+  typedef logic[$clog2(NUM_PHYREG)-1:0] phyRegPtr_t;
+ 
   
   RobIndex_T dstRobIndex;
   ArchRegisterId_T dstArchReg, srcArchReg1, srcArchReg2;
@@ -49,7 +48,7 @@ module RegRenamingUnit #(
     end
     
     phyRegBitmap <= NUM_PHYREG{1'b0};
-    phyRegPtr <= SIZE_PHYREGPTR{1'b0};
+    phyRegPtr <= $clog2(NUM_PHYREG){1'b0};
     
   endfunction
   
