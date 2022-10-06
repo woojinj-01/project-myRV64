@@ -15,11 +15,26 @@ package Type;
   typedef logic[7:0] PhyRegisterId_T; //Register Id for 128 physical registers, msb is for valid bit
 
   typedef enum logic[7:0]{
-      //Operation-to-Id mapping
-      //e.g, ADD = 7'b10010000
-  }OperationId_T;                   //Maps a single operation to a single byte
-
-  // Data types to support 8 Bytes to 1 Byte
+      //Operation-to-Id linear mapping
+      //e.g, ADD = 8'b00011011
+   LUI,    AUIPC,    JAL,    JALR,    BEQ
+   BNE,    BLT,      BGE,    BLTU,    BGEU,
+   LB,     LH,       LW,     LBU,     LHU,
+   SB,     SH,       SW,     ADDI,    SLTI,
+   SLTIU,  XORI,     ORI,    ANDI,    SLLI,
+   SRLI,   SRAI,     ADD,    SUB,     SLL,
+   SLT,    SLTU,     XOR,    SRL,     SRA,
+   OR,     AND,      FENCE,  ECALL,   BREAK,
+   
+   LWU,    LD,       SD,     SLLI,    SRLI,
+   SRAI,   ADDIW,    SLLIW,  SRLIW,   SRAIW,
+   ADDW,   SUBW,     SLLW,   SRLW,    SRAW
+   
+  }OperationId_T;
+ 
+  typedef logic[63:0] Instruction_T;
+ 
+  // Data types support 8 Bytes to 1 Byte
   typedef logic[63:0] Data64_T;
   typedef logic[31:0] Data32_T;
   typedef logic[15:0] Data16_T;
