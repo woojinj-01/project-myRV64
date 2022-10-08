@@ -63,7 +63,8 @@ package Packet;
 		logic[24:23] reserved1;
 		Boolean_T isBranchInstruction;
 		Boolean_T isBranchTaken;
-		logic[20:8] reserved2;
+		logic[20:14] reserved2;
+		ArchRegisterId_T dstArchReg;
 		OperationId_T operationId;
 		
 	}DecoderToRob1;
@@ -153,6 +154,7 @@ package Packet;
 		input RobIndex_T robIndex,
 		input Boolean_T isBranchInstruction,
 		input Boolean_T isBranchTaken,
+		input ArchRegisterId_T dstArchReg,
 		input OperationId_T operationId
 	);
 		Packet::DecoderToRob1 packet;
@@ -162,6 +164,7 @@ package Packet;
 		packet.isBranchInstruction = isBranchInstruction;
 		packet.isBranchTaken = isBranchTaken;
 		packet.reserved2 = '0;
+		packet.dstArchReg = dstArchReg;
 		packet.operationId = operationId;
 		
 		return packet;
@@ -264,12 +267,14 @@ package Packet;
 		output RobIndex_T robIndex,
 		output Boolean_T isBranchInstruction,
 		output Boolean_T isBranchTaken,
+		output ArchRegister_T dstArchReg,
 		output OperationId_T operationId
 	);
 		
 		robIndex = packet.robIndex;
 		isBranchInstruction = packet.isBranchInstruction;
 		isBranchTaken = packet.isBranchTaken;
+		dstArchReg = packet.dstArchReg;
 		operationId = packet.operationId;
 		
 		return;
