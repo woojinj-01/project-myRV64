@@ -14,6 +14,7 @@ module RegRenamingUnit #(
   input SIG_RSTn,
   
   input Packet::DecoderToRru packetFromRru,
+  input Packet::RobToRru packetFromRob,
   
   output Packet::RruToRob1 packetToRob1,
   output Packet::RruToRob2 pacektToRob2
@@ -22,7 +23,7 @@ module RegRenamingUnit #(
             CURRENTMAP_START = 13, CURRENTMAP_END = 7,
             PASTMAP_START = 6, PASTMAP_END = 0;
   
-  typedef enum{MAP_CONSUMER, MAP_PRODUCER}      mapOption_t;
+  typedef enum{MAP_CONSUMER, MAP_PRODUCER}   mapOption_t;
   typedef logic[VALID_START:PASTMAP_END] mapTable_t[0:NUM_ARCHREG-1];
   typedef logic[0:NUM_PHYREG-1] bitmap_t;
   typedef logic[$clog2(NUM_PHYREG)-1:0] phyRegPtr_t;
@@ -56,28 +57,68 @@ module RegRenamingUnit #(
     input ArchRegisterId_T archReg,
     input mapTable_t mapTable,
     input bitmap_t phyRegBitmap,
-    input phyRegPtr_t phyRegPtr
-    input mapOption_t option,
+    input phyRegPtr_t phyRegPtr,
+    input mapOption_t option
   );
+    //INVALIDATES msb in returning PhyRegisterId_T when no phyreg is avaliable.
+    PhyRegisterId_T tempPhyreg;
+    
     if(MAP_CONSUMER == option) begin
       return mapTable[archReg][CURRENTMAP_START:CURRENTMAP_END];
     end
     else if(MAP_PRODUCER == option) begin
-      return findNewPhyReg(
+      tempPhyreg = findNewPhyReg(
        phyRegBitmap, phyRegPtr
       );
+      phyRegBitmap = phyRegBitmap ^ {{1'b1}<<tempPhyReg};
+      
+      return tempPhyreg;
     end
   endfunction
   
-  function findNewPhyReg(
+  function PhyRegisterId_T phyRegToMapManually(
+    input ArchRegisterId_T archReg,
+    input mapTable_t mapTable,
+    input bitmap_t phyRegBitmap,
+    input PhyRegisterId_T targetReg
+  );
+    
+    if(!phyRegBitmap[targetReg]) phyRegBitmap = phyRegBitmap ^ {{1'b1}<<targetReg};
+    
+    return targetReg;
+  endfunction
+  
+  function PhyRegisterId_T findNewPhyReg(
     input bitmap_t phyRegBitmap,
     input phyRegPtr_t phyRegPtr
   );
-    /*
+    //INVALIDATES msb in PhyRegisterId_T when no phyreg is avaliable.
+    bitmap_t tempBitmap;
+    phyRegPtr_T tempPtr;
+    int i;
     
-      Algorithm to find new phyreg.
+    if(!(|phyRegBitmap)) return {1'b1}<<($clog2(NUM_PHYREG));       //case: no phyreg available
+    else begin
+      tempPtr = phyRegPtr;
+      for(i=0;i<NUM_PHYREG;i++)begin
+         if(!phyRegBitmap[tempPtr]) return tempPtr;
+         else tempPtr = (tempPtr + 1) / NUM_PHYREG;
+      end
+    end
     
-    */
+    return {1'b1}<<($clog2(NUM_PHYREG));
+  endfunction
+  
+  function bitmap_t freeThisPhyReg(
+    input bitmap_t phyRegBitmap,
+    input PhyRegisterId_T targetReg
+  );
+    bitmap_t tempBitmap;
+    
+    if(phyRegBitmap[targetReg]) tempBitmap = phyRegBitmap ^ {{1'b1} << targetReg};
+    
+    return tempBitmap;
+    
   endfunction
     
   
