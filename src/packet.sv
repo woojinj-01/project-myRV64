@@ -22,6 +22,10 @@
 3. DecoderToRob[1-4]
   Src: Instruction Decoder
   Dst: Re-Order Buffer
+  
+4. RobToRru
+  Src: Re-Order Buffer
+  Dst: Register Renaming Unit
 
 =======================================================*/
 import Type::*;
@@ -78,6 +82,14 @@ package Packet;
 		Data32_T lowerPC;
 	
 	}DecoderToRob4;
+	
+	typedef struct packed{
+		
+		logic branchRecovery,
+		
+		logic cmdFree,
+		logic 
+	}RobToRru;
 	
 	/*=======================================*/
 	
@@ -179,6 +191,16 @@ package Packet;
 	);
 		Packet::DecoderToRob4 packet;
 		packet.lowerPC = lowerPC;
+		
+		return packet;
+		
+	endfunction
+		
+	function automatic Packet::RobToRru EncapRobToRru (
+		//input Data32_T lowerPC
+	);
+		Packet::RobToRru packet;
+		//packet.lowerPC = lowerPC;
 		
 		return packet;
 		
@@ -285,7 +307,14 @@ package Packet;
 		
 		return;
 	endfunction
-	
+		
+	function automatic void DecapRobToRru(
+		input Packet::RobToRru packet,
+		
+		//output
+	);
+		//
+	endfunction
 	/*====================================================*/
 	
 	
