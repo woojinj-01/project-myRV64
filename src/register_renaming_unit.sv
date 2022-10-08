@@ -63,6 +63,11 @@ module RegRenamingUnit #(
     //INVALIDATES msb in returning PhyRegisterId_T when no phyreg is avaliable.
     PhyRegisterId_T tempPhyreg;
     
+    if(!archReg[$clog2(NUM_PHYREG)])begin
+      tempPhyreg = 
+      return tempPhyreg;
+    end
+    
     if(MAP_CONSUMER == option) begin
       return mapTable[archReg][CURRENTMAP_START:CURRENTMAP_END];
     end
